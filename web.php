@@ -36,6 +36,8 @@ Route::group(['middleware' => ['auth', 'livreur']], function(){
  Route::get('/requetes','RequetesController@requetes');
  Route::get('/requete','RequetesController@requete');
  Route::post('/requete_edit', 'RequetesController@edit');
+ Route::post('/requete_delete', 'RequetesController@delete');
+ Route::post('/editrequetestatus', 'RequetesController@editrequetestatus');
  Route::post('/sendmessage','RequetesController@sendmessage');
 
 

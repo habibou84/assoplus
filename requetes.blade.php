@@ -99,11 +99,7 @@
 
     <!-- App Header -->
     <div class="appHeader">
-        <div class="left">
-            <a href="#" class="headerButton goBack">
-                <ion-icon name="chevron-back-outline"></ion-icon>
-            </a>
-        </div>
+        
         <div class="pageTitle">
             Messages
         </div>
@@ -130,7 +126,7 @@
       @endif
             <div class="section-title"></div>
             
-
+               @if(Auth()->user()->usertype == "membre")        
                     <ul class="nav nav-tabs lined" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#overview2" role="tab">
@@ -142,11 +138,9 @@
                                 Mes messages
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#settings2" role="tab">
-                                 Membres
-                            </a>
-                        </li>
+
+                         
+                       
                     </ul>
                   </div>   
                  <div class="card  mt-1">
@@ -184,7 +178,7 @@
                         <div class="tab-pane fade" id="cards2" role="tabpanel">
                             @if(Auth::user()->membre->requetes->count() > 0)
                             @foreach(Auth::user()->membre->requetes as $requete)
-
+         <div class="mb-2">
             <a  href="requete?id={{$association->id}}&requete_id={{$requete->id}}" class="item mb-2 ">
                            <div class="detail">
                        
@@ -197,16 +191,280 @@
                         <div class="price text-danger">{{$requete->status}}</div>
                     </div>
                 </a>
-                            @endforeach
+                </div>    <hr>        @endforeach
                             @endif
                         </div>
-                        <div class="tab-pane fade" id="settings2" role="tabpanel">
-                            Autres requêtes
-                        </div>
+                       
                     </div>
                 </div>
             </div>
-        
+           
+           @endif
+
+           @if(Auth()->user()->usertype == "bureau")  
+            <ul class="nav nav-tabs lined" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#overview2" role="tab">
+                                Envoyer un message
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#cards2" role="tab">
+                                Mes messages
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#overview3" role="tab">
+                                Messages soumis
+                            </a>
+                        </li>
+                       
+                    </ul>
+                  </div>   
+                 <div class="card  mt-1">
+                <div class="card-body pt-0">   
+                    <div class="tab-content mt-2">
+                        <div class="tab-pane fade show active" id="overview2" role="tabpanel">
+                            <form method="post" action="sendmessage">
+                                @csrf
+                                <div class="form-group">
+                                    <label class="form-label">Titre</label>
+                                    <input type="" name="titre" class="form-control">
+                                    
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Titre</label>
+                                    <select  name="categorie" class="form-control">
+                                        <option value="">Choisir une catégorie</option>
+                                        <option @if(old('catégorie') == 'aide') selected @endif value="aide">Demande d'aide</option>
+                                        <option @if(old('catégorie') == 'financement') selected @endif value="financement">Demande de financement</option>
+                                        <option @if(old('catégorie') == 'autre') selected @endif value="autre">Autres</option>
+                                    </select>
+                                    
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Détail</label>
+                                    <textarea value="{{old('detail')}}" name="detail" class="form-control"></textarea>
+                                    
+                                </div>
+
+                                <button class="btn btn-primary" type="submit">Envoyer</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="cards2" role="tabpanel">
+                            @if(Auth::user()->membre->requetes->count() > 0)
+                            @foreach(Auth::user()->membre->requetes as $requete)
+         <div class="mb-2">
+            <a  href="requete?id={{$association->id}}&requete_id={{$requete->id}}" class="item mb-2 ">
+                           <div class="detail">
+                       
+                        <div>
+                            <strong>{{$requete->titre}}</strong>
+                            <p>{{substr($requete->detail, 0, 40)}}@if(strlen($requete->detail)>40)...  @endif</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="price text-danger">{{$requete->status}}</div>
+                    </div>
+                </a>
+                </div>    <hr>        @endforeach
+                            @endif
+                        </div>
+                       
+
+                       <div class="tab-pane fade show" id="overview3" role="tabpanel">
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+           
+           @endif 
+
+
+           @if(Auth()->user()->usertype == "manager")  
+           <div style="overflow: auto; white-space: nowrap;">
+            <ul class="nav nav-tabs lined "   role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#overview2" role="tab">
+                                Tout
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#cards2" role="tab">
+                                Soumis
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#overview3" role="tab">
+                                En attente
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#overview4" role="tab">
+                                Encours
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#overview5" role="tab">
+                                Terminé
+                            </a>
+                        </li>
+
+                         <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#overview6" role="tab">
+                                Refusé
+                            </a>
+                        </li>
+                       
+                    </ul>
+                  </div>   
+                 <div class="card  mt-1">
+                <div class="card-body pt-0">   
+                    <div class="tab-content mt-2">
+                        <div class="tab-pane fade show active" id="overview2" role="tabpanel">
+
+                            @if($association->requetes->count() > 0)
+                            @foreach($association->requetes as $requete)
+         <div class="mb-2">
+            <a  href="requete?id={{$association->id}}&requete_id={{$requete->id}}" class="item mb-2 ">
+                           <div class="detail">
+                       
+                        <div>
+                            <strong>{{$requete->titre}}</strong>
+                            <p>{{substr($requete->detail, 0, 40)}}@if(strlen($requete->detail)>40)...  @endif</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="price text-danger">{{$requete->status}}</div>
+                    </div>
+                </a>
+                </div>    <hr>        @endforeach
+                            @endif
+
+                            
+                        </div>
+
+
+                        <div class="tab-pane fade" id="cards2" role="tabpanel">
+                                                    </div>
+                       
+
+                       <div class="tab-pane fade show" id="overview3" role="tabpanel">
+
+                         @if($association->requetes->where("status", "en attente")->count() > 0)
+                            @foreach($association->requetes as $requete)
+         <div class="mb-2">
+            <a  href="requete?id={{$association->id}}&requete_id={{$requete->id}}" class="item mb-2 ">
+                           <div class="detail">
+                       
+                        <div>
+                            <strong>{{$requete->titre}}</strong>
+                            <p>{{substr($requete->detail, 0, 40)}}@if(strlen($requete->detail)>40)...  @endif</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="price text-danger">{{$requete->status}}</div>
+                    </div>
+                </a>
+                </div>    <hr>        @endforeach
+                            @endif
+
+                            
+                        </div>
+                        
+
+
+
+
+                       <div class="tab-pane fade show" id="overview4" role="tabpanel">
+
+                         @if($association->requetes->where("status", "encours")->count() > 0)
+                            @foreach($$association->requetes->where("status", "encours") as $requete)
+         <div class="mb-2">
+            <a  href="requete?id={{$association->id}}&requete_id={{$requete->id}}" class="item mb-2 ">
+                           <div class="detail">
+                       
+                        <div>
+                            <strong>{{$requete->titre}}</strong>
+                            <p>{{substr($requete->detail, 0, 40)}}@if(strlen($requete->detail)>40)...  @endif</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="price text-danger">{{$requete->status}}</div>
+                    </div>
+                </a>
+                </div>    <hr>        @endforeach
+                            @endif
+
+                            
+                        </div>
+
+
+
+
+                       <div class="tab-pane fade show" id="overview6" role="tabpanel">
+
+                         @if($association->requetes->where("status", "refuse")->count() > 0)
+                            @foreach($association->requetes->where("status", "refuse") as $requete)
+         <div class="mb-2">
+            <a  href="requete?id={{$association->id}}&requete_id={{$requete->id}}" class="item mb-2 ">
+                           <div class="detail">
+                       
+                        <div>
+                            <strong>{{$requete->titre}}</strong>
+                            <p>{{substr($requete->detail, 0, 40)}}@if(strlen($requete->detail)>40)...  @endif</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="price text-danger">{{$requete->status}}</div>
+                    </div>
+                </a>
+                </div>    <hr>        @endforeach
+                            @endif
+
+                            
+                        </div>
+
+                  
+
+                    <div class="tab-pane fade show" id="overview3" role="tabpanel">
+
+                         @if($association->requetes->where("status", "termine")->count() > 0)
+                            @foreach($association->requetes->where("status", "termine") as $requete)
+         <div class="mb-2">
+            <a  href="requete?id={{$association->id}}&requete_id={{$requete->id}}" class="item mb-2 ">
+                           <div class="detail">
+                       
+                        <div>
+                            <strong>{{$requete->titre}}</strong>
+                            <p>{{substr($requete->detail, 0, 40)}}@if(strlen($requete->detail)>40)...  @endif</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="price text-danger">{{$requete->status}}</div>
+                    </div>
+                </a>
+                </div>    <hr>        @endforeach
+                            @endif
+
+                            
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+           
+           @endif 
 
        
 

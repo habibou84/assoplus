@@ -17,16 +17,16 @@
     
 </head>
 
-<body class="bg-white">
+<body class="">
      @include('includes.rightmenumodal')
 
     
     <div class="appHeader">
-        <div class="left">
-            <a href="#" class="headerButton goBack">
-                <ion-icon name="chevron-back-outline"></ion-icon>
+        
+            <a href="requetes?id={{$association->id}}" class="headerButton goBack">
+                <ion-icon name="mail-outline"></ion-icon>
             </a>
-        </div>
+        
         <div class="pageTitle">
             Message
         </div>
@@ -66,8 +66,16 @@
                
   
              </div>
+             @endif
+             @if(Auth()->user()->usertype == "manager")
+             <div class="col">
+                <button class="btn btn-primary btn-sm " >Soumettre </button>
              </div>
              @endif
+             </div>
+             
+
+
 
              @if(Auth()->user()->usertype == "manager")
              <div class="row mt-2">
@@ -88,9 +96,16 @@
                                  
                                  <option value="">Choisir un status</option>
                                  <option  value="en attente">En attente</option>
-                                 <option  value="accepte">Accepté</option>
+                                 <option  value="encours">Encours</option>
+
+                                  <option value="accepte">Accepté</option>
+                                 
+                                 <option value="refuse">Rejeté</option>
+
+
+
                                  <option value="termine">Terminé</option>
-                                 <option value="refuse">Rejectée</option>
+
                                  
                                </select>
 
@@ -124,38 +139,46 @@
                 {{$requete->titre}}
             </h1>
             <div class="blog-header-requete mt-2 mb-2">
-                <div>
+                <div class="row">
+                    <div class="col">
                     <img 
                       
 
-                    src="assets/img/sample/avatar/avatar1.jpg"
+                    @if(Storage::disk('s3')->exists($requete->membre->photo))
+    src="{{Storage::disk('s3')->url($requete->membre->photo)}}" 
+                        @else
+                src="assets/img/sample/photo/3.jpg"
+                 @endif
                     
 
                      alt="img" class="imaged w24 rounded me-05">
                     by <a href="#">{{$requete->membre->nom}}</a><br>
                     {{$requete->status}}
-                
-                <div class="float-right">
+                </div>
+                <div class="col float-right">
                     {{$requete->created_at->format('d-m-Y')}}<br>
                     {{$requete->categorie}}
                 </div>
                 </div>
             </div>
-            <div class="lead">
-                {{$requete->detail}}
-            </div>
+
+          
+                
+            
         </div>
 
         <div class="section mt-2">
             
-           <figure>
-               
-           </figure>
+          <div class="card">
+                    <div class="card-body"> 
+                {{$requete->detail}}
+                 </div>
+                </div> 
            
             
         </div>
 
-        <div class="section">
+        <div class="section mt-2">
             <button id="shareBtn" class="btn btn-block btn-primary" >
                 <ion-icon name="share-outline"></ion-icon>Partager
             </button>

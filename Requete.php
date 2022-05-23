@@ -14,5 +14,10 @@ class Requete extends Model
     return $this->belongsTo('App\Membre');
    }
 
+   public function association()
+   {
+    return $this->belongsTo('App\Association');
+   }
+
 
 }

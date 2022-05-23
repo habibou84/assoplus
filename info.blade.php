@@ -30,11 +30,7 @@
         <div class="pageTitle">
             Info
         </div>
-        <div class="right">
-            <a href="#" class="headerButton" data-toggle="modal" data-target="#sidebarPanel">
-                <ion-icon name="menu-outline"></ion-icon>
-            </a>
-        </div>
+        @include("includes.rightmenu")
     </div>
     <!-- * App Header -->
 
@@ -132,7 +128,11 @@
                     <img 
                       
 
-                    src="assets/img/sample/avatar/avatar1.jpg"
+                    @if(Storage::disk('s3')->exists($info->user->membre->photo))
+                            src="{{Storage::disk('s3')->url($info->user->membre->photo)}}" 
+                             @else
+                src="assets/img/sample/photo/3.jpg"
+                 @endif
                     
 
                      alt="img" class="imaged w24 rounded me-05">

@@ -86,7 +86,7 @@ class RequetesController extends Controller
    if($requete)
     {return view('requete')->with('requete', $requete)->with("association", $association);}
      else{
-        return redirect()->action('InfosController@requetes',["id"=>$request->id, "status"=>"Message supprimé"]);
+        return redirect()->action('RequetesController@requetes',["id"=>$request->id, "status"=>"Message supprimé"]);
        }
 
   }
@@ -145,88 +145,52 @@ class RequetesController extends Controller
  
 
 
-   public function delete(Request $request){
-    
+ 
+
+
+
+  public function editrequetestatus(Request $request){
+
+    $request->validate([
+            'status' => 'required',
+            
+            
+        ]);
+      
+     
      $id = $request->id;
+     $info = Requete::findOrFail($id);
+     $status = $request->status;
+
+     $info->status  = $status;
      
-     $cotisation = Cotisation::findOrFail($id);
-     
-     if($cotisation->payements->count()>0)
-     {
-        return redirect()->back()->with("warning", "Pour supprimer cette cotisation, il faut d'abord supprimer les payements qui y sont liés");
-     }
+
 
      
 
-      $cotisation->delete();
-        return redirect()->back()->with("status", "Cotisation supprimé!");
+        $info->update();
+
+        return redirect()->back()->with("status", "Stutus Modifiée");
+
 
   }
 
 
 
-  public function editaccount(Request $request) 
-  {
+  public function delete(Request $request){
+    
+     $id = $request->id;
+     
+     $info = Requete::findOrFail($id);
+     
+     
 
+     
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string'],
-            'adresse' => ['required', 'string', 'max:255'],
-           
-        ]);
+      $info->delete();
+        return redirect()->back()->with("status", "Message supprimé!");
 
-        $id = Auth::user()->livreur_id;
-
-        $livreur = Livreur::findOrFail($id);
-
-        $livreur->nom = $request->name;
-        $livreur->city = $request->city;
-        $livreur->adresse = $request->adresse;
-         
-        $livreur->update();  
-
-        return redirect()->back()
-            ->with('status','Profile modifié.');
-
-  } 
-
-
-  public function editpassword(Request $request) 
-  {
-       $id = Auth::user()->livreur_id;
-
-        $livreur = Livreur::findOrFail($id);
-
-        
-
-
-
-        $request->validate([
-
-            'password' => ['required', 'string', 'min:8', 'same:confirm_password'],
-            
-           
-        ]);
-
-        if( !Hash::check($request->current_password, Auth::user()->password))
-        {
-            
-          $errors = new MessageBag();
-           $errors->add('current_password', "Le mot de passe actuel n'est pas correct ");
-          
-           return back()->withErrors($errors);
-        }
-
-        Auth::user()->password = Hash::make($request->password);
-        
-         
-        Auth::user()->update();  
-
-        return redirect()->back()
-            ->with('status','Mot de passe modifié.');
-
-  } 
+  }
 
 
   public function compte(){
